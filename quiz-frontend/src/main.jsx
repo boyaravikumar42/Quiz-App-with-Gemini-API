@@ -4,7 +4,7 @@ import './index.css'
 import App from './App.jsx'
 import {BrowserRouter} from 'react-router-dom'
 import {LoginContextProvider} from './context/LoginContext'
-
+window.global=window;
 createRoot(document.getElementById('root')).render(
   <StrictMode>  
       <BrowserRouter>

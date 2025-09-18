@@ -16,11 +16,11 @@ import QuizList from './components/QuizList'
 import ResetPassword from './components/ResetPassword'
 import ConductQuiz from './components/ConductQuiz'
 import Leaderboard from './components/Leaderboard'
+import PracticeQuiz from './components/PracticeQuiz'
+import About from './components/About'
 
 
 function App() {
-  
-
   return (
     <div className="App">
       <NavBar/>
@@ -34,10 +34,11 @@ function App() {
         <Route path="/quiz-generator" element={<GenerateQuizForm />} />
         <Route path="/quizzes" element={<QuizList />} />
         <Route path='*' element={<NotFound/>}/>
-        <Route path="/about" element={<Home />} />
+        <Route path="/about" element={<About/>} />
         <Route path ="/password-reset" element={<ResetPassword/>}></Route>
         <Route path="/conduct-quiz/:quizId" element={<ConductQuiz />} />
         <Route path="/leaderboard/:quizId" element={<Leaderboard />} />
+        <Route path="/practice-quiz" element={<PracticeQuiz />} />
       </Routes>
        <ToastContainer position="top-right" autoClose={3000} theme="colored" />
     

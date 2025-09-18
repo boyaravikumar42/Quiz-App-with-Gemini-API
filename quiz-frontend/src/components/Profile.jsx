@@ -3,6 +3,7 @@ import { useLoginContext } from "../context/LoginContext";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {Link} from 'react-router-dom'
 import {
   FaUser,
   FaEnvelope,
@@ -137,7 +138,7 @@ const Profile = () => {
   }
 
   return (
-    <section className="flex flex-col items-center min-h-screen p-6 mt-12 space-y-6 bg-sky-50">
+    <section className="flex flex-col items-center min-h-screen p-6 mt-12 md:mt-22 space-y-6 bg-sky-50">
       {/* User Info */}
       <div className="bg-white p-6 rounded-2xl shadow-md text-center w-full max-w-md">
         <h1 className="text-2xl font-bold flex justify-center items-center gap-2 text-indigo-600">
@@ -249,6 +250,7 @@ const Profile = () => {
                 }
                 >{quiz.title}</h3>
                 <p className="text-gray-600 text-sm">{quiz.description}</p>
+                <Link to={`/leaderboard/${quiz.id}`}>results</Link>
 
                 {expandedQuiz?.id === quiz.id && (
                   <div className="mt-4 space-y-2">
@@ -266,7 +268,7 @@ const Profile = () => {
                       <input
                         type="datetime-local"
                         className="border rounded-lg p-2 w-full"
-                        value={quizEditData.startTime}
+                        value={quizEditData.startTime || quiz.startTime}
                         placeholder="Start Time"
                         required
                         onChange={(e) =>
@@ -275,7 +277,7 @@ const Profile = () => {
                       />
                       <select
                         className="border rounded-lg p-2 w-full"
-                        value={quizEditData.status}
+                        value={quizEditData.status || quiz.status}
                         onChange={(e) =>
                           setQuizEditData({ ...quizEditData, status: e.target.value })
                         }

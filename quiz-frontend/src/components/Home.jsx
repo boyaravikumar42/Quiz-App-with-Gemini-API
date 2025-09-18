@@ -1,14 +1,15 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { FaSearch, FaPlusCircle, FaMagic } from "react-icons/fa";
 
 const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-br from-sky-100 to-sky-150 px-6">
+    <section className="flex flex-col justify-center items-center mt-12 min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 px-6">
       <div className="max-w-3xl text-center space-y-6">
         {/* App Name */}
-        <h1 className="text-4xl md:text-5xl font-extrabold text-indigo-700">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-blue-700">
           AI-Powered Quiz App
         </h1>
 
@@ -21,18 +22,18 @@ const Home = () => {
         </p>
 
         {/* Buttons */}
-        <div className="flex justify-center gap-4 mt-6">
+        <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12 px-8">
           <button
             onClick={() => navigate("/quizzes")}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl shadow-md transition"
+            className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl shadow-md transition-transform transform hover:scale-102 w-full sm:w-auto"
           >
-            🔍 Explore Quizzes
+            <FaSearch /> Explore Quizzes
           </button>
           <button
             onClick={() => navigate("/generate-quiz")}
-            className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl shadow-md transition"
+            className="flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl shadow-md transition-transform transform hover:scale-102 w-full sm:w-auto"
           >
-            ⚡ Generate Quiz
+            <FaMagic/> Generate Quiz
           </button>
         </div>
       </div>

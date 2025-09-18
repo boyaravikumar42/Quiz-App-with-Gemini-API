@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useLoginContext } from "../context/LoginContext";
-import { FaUserCircle, FaBars, FaTimes, FaHome, FaInfoCircle, FaQuestionCircle, FaPlusCircle } from "react-icons/fa";
+import { FaUserCircle, FaBars, FaTimes, FaHome, FaInfoCircle, FaQuestionCircle, FaPlusCircle, FaPrescriptionBottleAlt, FaVideoSlash, FaViadeoSquare, FaMagic } from "react-icons/fa";
 
 const NavBar = () => {
   const { isLoggedIn, user } = useLoginContext();
@@ -23,7 +23,7 @@ const NavBar = () => {
 
           {/* Center: Logo */}
           <div className="flex items-center justify-center flex-1 sm:justify-start">
-            <img src="/logo2.png" alt="Quiz Logo" className="h-10  mr-2" />
+            <Link to="/"><img src="/logo2.png" alt="Quiz Logo" className="h-10  mr-2" /></Link>
             {/* <span className="font-bold text-xl">Quiz App</span> */}
           </div>
 
@@ -62,6 +62,9 @@ const NavBar = () => {
         <Link to="/quiz-generator" className="flex items-center gap-2 hover:text-gray-200">
           <FaPlusCircle /> Generate Quiz
         </Link>
+        <Link to="/practice-quiz" className="flex items-center gap-2 hover:text-gray-200">
+          <FaMagic/> Practice
+        </Link>
       </div>
 
       {/* Mobile Dropdown Menu */}
@@ -79,6 +82,9 @@ const NavBar = () => {
           <Link to="/quiz-generator" className="flex items-center gap-2 hover:text-gray-200" onClick={() => setMenuOpen(false)}>
             <FaPlusCircle /> Generate Quiz
           </Link>
+          <Link to="/practice-quiz" className="flex items-center gap-2 hover:text-gray-200" onClick={() => setMenuOpen(false)}>
+          <FaMagic/> Practice
+        </Link>
         </div>
       )}
     </nav>

@@ -29,7 +29,7 @@ const QuizList = () => {
   }, []);
 
   return (
-    <section className="flex justify-center items-center min-h-screen bg-gray-50 p-6">
+    <section className="flex justify-center items-center min-h-screen bg-gray-50 pt-6">
       <div className="p-6 rounded-2xl w-full max-w-5xl space-y-6">
         {loading && <p className="text-center text-blue-600">⏳ Loading quizzes...</p>}
         {message && <p className="text-center text-red-500">{message}</p>}

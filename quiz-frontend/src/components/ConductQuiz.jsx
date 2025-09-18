@@ -36,7 +36,7 @@ const ConductQuiz = () => {
         );
         setQuiz(response.data);
         setTimeLeft(response.data.duration * 60); // minutes → seconds
-        startTime=Date.now();
+        setStartTime(Date.now());
       } catch (error) {
         console.error("Error fetching quiz:", error);
       }
@@ -130,7 +130,7 @@ const ConductQuiz = () => {
           <FaTimesCircle /> Wrong: {wrong}
         </p>
         <Link
-          to="/dashboard"
+          to={`/leaderboard/${quizId}`}
           className="mt-4 text-blue-600 underline hover:text-blue-800"
         >
           See Results

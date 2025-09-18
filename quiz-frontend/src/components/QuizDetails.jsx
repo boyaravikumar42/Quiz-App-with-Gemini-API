@@ -8,6 +8,12 @@ import {
   FaClock,
   FaCalendarAlt,
   FaCheckCircle,
+  FaSpeakerDeck,
+  FaSpeakap,
+  FaFileImport,
+  FaHandPointUp,
+  FaHandPointLeft,
+  FaHandPointRight,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
@@ -83,7 +89,7 @@ const QuizDetails = ({ quiz, onBack }) => {
   };
 
   return (
-    <div className="space-y-6 p-6 bg-white rounded-2xl shadow-lg mt-8 md:mt-12">
+    <div className="space-y-3 p-6 bg-white rounded-2xl shadow-md mt-8 md:mt-12  w-full md:w-3/4 lg:w-1/2 mx-auto">
       {/* Back Button */}
       <button
         onClick={onBack}
@@ -100,8 +106,12 @@ const QuizDetails = ({ quiz, onBack }) => {
 
       {/* Start Time */}
       <div className="flex items-center gap-2 text-gray-500">
-        <FaCalendarAlt /> {new Date(quiz.startTime).toLocaleString()}
+        <FaCalendarAlt /> Start time: {new Date(quiz.startTime).toLocaleString()}
       </div>
+       <div className="flex items-center gap-2 text-gray-500">
+        <FaHandPointRight />Note: The time shown above is an  quiz creator intended time to start the quiz.But not exact time. It will be dependended on quiz Creator interest to start the quiz.
+      </div>
+
 
       {/* Instructions */}
       <div>

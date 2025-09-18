@@ -11,6 +11,8 @@ import {
   FaSave,
   FaLayerGroup,
 } from "react-icons/fa";
+import { toast } from "react-toastify";
+import {useNavigate} from "react-router-dom"
 
 const QuizGeneratorForm = () => {
   const [formData, setFormData] = useState({
@@ -27,6 +29,7 @@ const QuizGeneratorForm = () => {
   const [quiz, setQuiz] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const token = localStorage.getItem("token");
 
@@ -47,6 +50,11 @@ const QuizGeneratorForm = () => {
         formData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      if(response.status==500)
+      {
+        toast.error(response.data);
+        return;
+      }
       setQuiz(response.data);
       setMessage("Quiz generated successfully! You can edit it below.");
     } catch (error) {
@@ -71,6 +79,8 @@ const QuizGeneratorForm = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setMessage("Quiz saved successfully!");
+      navigate("/quizzes")
+      
     } catch (error) {
       console.error("Error saving quiz:", error);
       setMessage("Failed to save quiz.");

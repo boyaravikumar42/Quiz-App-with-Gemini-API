@@ -46,7 +46,8 @@ public class SecurityConfig {
                                 "/api/participants/**",
                                 "/api/quizzes/by-access-code/*",
                                 "/api/quizzes/all",
-                                "/api/quizzes/*"
+                                "/api/quizzes/*",
+                                "/ws/**"
 
                         ).permitAll()
                         .anyRequest().authenticated()

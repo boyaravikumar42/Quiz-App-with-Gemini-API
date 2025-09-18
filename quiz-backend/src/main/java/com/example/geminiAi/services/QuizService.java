@@ -83,6 +83,8 @@ public class QuizService {
 
     public Quiz createQuiz(QuizRequest request) {
         List<QuizQuestion> questions = generateQuizQuestions(request.getTopic(), request.getQuestionCount(),request.getDifficulty());
+        if(questions.isEmpty())
+            return null;
 
         Quiz quiz = Quiz.builder()
                 .title(request.getTitle())

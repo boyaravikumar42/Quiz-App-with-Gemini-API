@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +19,7 @@ import com.example.geminiAi.models.Participant;
 import com.example.geminiAi.services.ParticipantService;
 
 import lombok.AllArgsConstructor;
-
+@CrossOrigin("http://localhost:5173/")
 @RestController
 @RequestMapping("/api/participants")
 @AllArgsConstructor
@@ -47,7 +48,14 @@ public class ParticipantController {
         long timeTaken = Long.parseLong(request.get("timeTaken").toString());
 
         Participant participant = participantService.submitQuiz(quizId, userId, score, timeTaken);
+
+        //broadcasting when submitted
+        List<Participant> updatedLeaderboard = participantService.getLeaderboard(quizId);
+        messagingTemplate.convertAndSend("/topic/leaderboard/" + quizId, updatedLeaderboard);
+
+
         return ResponseEntity.ok(participant);
+        
     }
 
     @GetMapping("/dashboard/{quizId}")

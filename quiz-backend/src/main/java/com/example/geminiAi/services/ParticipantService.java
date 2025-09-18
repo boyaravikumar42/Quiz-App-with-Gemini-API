@@ -66,7 +66,7 @@ public class ParticipantService {
         List<Participant> participants = participantRepo.findByQuizId(quizId);
         participants.sort(Comparator
                 .comparing(Participant::getScore).reversed()
-                .thenComparing(Participant::getSubmittedAt));
+                .thenComparing(Participant::getTimeTaken));
         return participants;
     }
     public Participant joinQuizByAccessCode(String accessCode, String username) {

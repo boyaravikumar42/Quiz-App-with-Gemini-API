@@ -3,6 +3,7 @@ package com.example.geminiAi.controllers;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +19,7 @@ import com.example.geminiAi.models.Quiz;
 import com.example.geminiAi.models.QuizRequest;
 import com.example.geminiAi.services.QuizService;
 
+import io.netty.handler.codec.http.HttpScheme;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -28,10 +30,14 @@ public class QuizController {
     private final QuizService quizService;
 
     @PostMapping("/generate")
-    public ResponseEntity<Quiz> generateQuiz(@RequestBody QuizRequest request, Authentication auth) {
+    public ResponseEntity<?> generateQuiz(@RequestBody QuizRequest request, Authentication auth) {
         String email = auth.getName(); // from authenticated user
         request.setCreatedBy(email);   // set creator from auth
         Quiz quiz = quizService.createQuiz(request);
+        if(quiz==null)
+        {
+            return new ResponseEntity<>("unable to generate tthe quiz... Try Again..!",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         return ResponseEntity.ok(quiz);
     }
 
