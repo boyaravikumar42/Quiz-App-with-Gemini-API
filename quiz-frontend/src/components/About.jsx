@@ -99,7 +99,7 @@ export default function About() {
               M. Mahesh
             </h3>
             <a
-              href="https://www.linkedin.com/in/mahesh-profile-link/"
+              href="https://www.linkedin.com/in/madam-mahesh-7aba71320"
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 hover:text-blue-800 flex justify-center items-center gap-2"

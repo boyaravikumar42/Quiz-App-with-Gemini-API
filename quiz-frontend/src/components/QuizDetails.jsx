@@ -8,19 +8,14 @@ import {
   FaClock,
   FaCalendarAlt,
   FaCheckCircle,
-  FaSpeakerDeck,
-  FaSpeakap,
-  FaFileImport,
-  FaHandPointUp,
-  FaHandPointLeft,
-  FaHandPointRight,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 const QuizDetails = ({ quiz, onBack }) => {
   const { user } = useLoginContext();
-  const [participant, setParticipant] = useState(null); // store participant details
+  const [participant, setParticipant] = useState(null); 
   const [loading, setLoading] = useState(false);
+  const [accessCodeInput, setAccessCodeInput] = useState(""); // store input
   const navigate = useNavigate();
 
   // Check participation
@@ -36,10 +31,10 @@ const QuizDetails = ({ quiz, onBack }) => {
             },
           }
         );
-        setParticipant(res.data); // user registered, may have participated
+        setParticipant(res.data);
       } catch (err) {
         if (err.response && err.response.status === 404) {
-          setParticipant(null); // not registered
+          setParticipant(null);
         } else {
           console.error("Failed to check participation", err);
         }
@@ -54,6 +49,17 @@ const QuizDetails = ({ quiz, onBack }) => {
       toast.error("You must be logged in to register!");
       return;
     }
+
+    if (!accessCodeInput.trim()) {
+      toast.error("Please enter access code!");
+      return;
+    }
+
+    if (accessCodeInput.trim() !== quiz.accessCode) {
+      toast.error("Invalid access code!");
+      return;
+    }
+
     setLoading(true);
     try {
       const res = await axios.post(
@@ -89,7 +95,7 @@ const QuizDetails = ({ quiz, onBack }) => {
   };
 
   return (
-    <div className="space-y-3 p-6 bg-white rounded-2xl shadow-md mt-8 md:mt-12  w-full md:w-3/4 lg:w-1/2 mx-auto">
+    <div className="space-y-3 p-6 bg-white rounded-2xl shadow-md mt-8 md:mt-12  w-full md:w-3/4 lg:w-[60vw] mx-auto">
       {/* Back Button */}
       <button
         onClick={onBack}
@@ -108,10 +114,10 @@ const QuizDetails = ({ quiz, onBack }) => {
       <div className="flex items-center gap-2 text-gray-500">
         <FaCalendarAlt /> Start time: {new Date(quiz.startTime).toLocaleString()}
       </div>
-       <div className="flex items-center gap-2 text-gray-500">
-        <FaHandPointRight />Note: The time shown above is an  quiz creator intended time to start the quiz.But not exact time. It will be dependended on quiz Creator interest to start the quiz.
+      <div className="flex items-center gap-2 text-gray-500">
+        Note: The time shown above is quiz creator's intended start time, but the
+        quiz may begin based on creator’s decision.
       </div>
-
 
       {/* Instructions */}
       <div>
@@ -131,7 +137,7 @@ const QuizDetails = ({ quiz, onBack }) => {
         </ul>
       </div>
 
-      {/* Status Button */}
+      {/* Status */}
       <div>
         <button
           className={`px-3 py-1 rounded-lg text-xs font-bold cursor-default ${
@@ -146,8 +152,18 @@ const QuizDetails = ({ quiz, onBack }) => {
         </button>
       </div>
 
-      {/* Action Button */}
-      <div>
+      {/* Access Code & Action Button */}
+      <div className="space-y-3">
+        {!participant && (
+          <input
+            type="text"
+            placeholder="Enter Access Code"
+            value={accessCodeInput}
+            onChange={(e) => setAccessCodeInput(e.target.value)}
+            className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+        )}
+
         {quiz.status === "COMPLETED" ? (
           <button
             onClick={handleResults}
@@ -175,15 +191,14 @@ const QuizDetails = ({ quiz, onBack }) => {
             onClick={handleQuit}
             className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition flex justify-center items-center gap-2"
           >
-             Quit
+            Quit
           </button>
-        ) :(
+        ) : (
           <button
-            
             className="w-full text-red-500  py-2 rounded-lg hover:text-red-600 transition"
-            disable={true}
+            disabled
           >
-            You are already participated...!
+            You have already participated!
           </button>
         )}
       </div>

@@ -3,7 +3,7 @@ import { useLoginContext } from "../context/LoginContext";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
 import {
   FaUser,
   FaEnvelope,
@@ -11,6 +11,7 @@ import {
   FaEdit,
   FaLock,
   FaTrash,
+  FaUsers,
 } from "react-icons/fa";
 
 const Profile = () => {
@@ -60,7 +61,7 @@ const Profile = () => {
   }, [user]);
 
   const updateProfile = async () => {
-      if (newUsername.trim() === "") {
+    if (newUsername.trim() === "") {
       return toast.error("Username should not be empty!");
     }
     try {
@@ -99,7 +100,6 @@ const Profile = () => {
     if (!quizEditData.startTime) {
       return toast.error("Start time is required!");
     }
-    console.log("Updating quiz with data:", quizEditData);
     try {
       await axios.put(
         `${import.meta.env.VITE_API_URL}/api/quizzes/update-status/${quizId}`,
@@ -138,7 +138,7 @@ const Profile = () => {
   }
 
   return (
-    <section className="flex flex-col items-center min-h-screen p-6 mt-12 md:mt-22 space-y-6 bg-sky-50">
+    <section className="flex flex-col items-center min-h-screen p-6 mt-12 space-y-6 bg-sky-50">
       {/* User Info */}
       <div className="bg-white p-6 rounded-2xl shadow-md text-center w-full max-w-md">
         <h1 className="text-2xl font-bold flex justify-center items-center gap-2 text-indigo-600">
@@ -149,7 +149,6 @@ const Profile = () => {
         </p>
 
         <div className="flex justify-center gap-4 mt-6">
-          {/* Update Profile */}
           <button
             className="p-3 rounded-full bg-indigo-600 text-white hover:bg-indigo-700"
             onClick={() => setEditingProfile(true)}
@@ -158,7 +157,6 @@ const Profile = () => {
             <FaEdit />
           </button>
 
-          {/* Change Password */}
           <button
             className="p-3 rounded-full bg-indigo-600 text-white hover:bg-indigo-700"
             onClick={() => setChangingPassword(true)}
@@ -167,7 +165,6 @@ const Profile = () => {
             <FaLock />
           </button>
 
-          {/* Logout */}
           <button
             className="p-3 rounded-full bg-red-500 text-white hover:bg-red-600"
             onClick={handleLogout}
@@ -241,35 +238,60 @@ const Profile = () => {
             {quizzes.map((quiz) => (
               <div
                 key={quiz.id}
-                className="bg-white rounded-2xl shadow-md p-4 cursor-pointer hover:shadow-lg transition"
+                className="bg-white relative rounded-2xl shadow-md p-5 hover:shadow-lg transition"
               >
-                <h3 
-                className="text-lg font-semibold text-indigo-600"
-                onClick={() =>
-                  setExpandedQuiz(expandedQuiz?.id === quiz.id ? null : quiz)
-                }
-                >{quiz.title}</h3>
-                <p className="text-gray-600 text-sm">{quiz.description}</p>
-                <Link to={`/leaderboard/${quiz.id}`}>results</Link>
+                {/* Status Badge */}
+                <span
+                  className={`absolute top-3 right-3 text-xs px-3 py-1 rounded-full font-bold ${
+                    quiz.status === "LIVE"
+                      ? "bg-green-100 text-green-700"
+                      : quiz.status === "SCHEDULED"
+                      ? "bg-yellow-100 text-yellow-700"
+                      : "bg-gray-200 text-gray-700"
+                  }`}
+                >
+                  {quiz.status}
+                </span>
 
+                <h3
+                  className="text-lg font-bold text-indigo-600 cursor-pointer"
+                  onClick={() =>
+                    setExpandedQuiz(expandedQuiz?.id === quiz.id ? null : quiz)
+                  }
+                >
+                  {quiz.title}
+                </h3>
+                <p className="text-gray-600 text-sm">{quiz.description}</p>
+
+                {/* Access Code Display */}
+                <p className="text-sm text-gray-500 mt-2">
+                  <strong>Access Code:</strong> {quiz.accessCode}
+                </p>
+
+                {/* Results / Participants Link */}
+                <Link
+                  to={`/leaderboard/${quiz.id}`}
+                  className="mt-2 inline-flex items-center gap-2 text-sm font-medium px-3 py-1 rounded-lg bg-indigo-100 text-indigo-700 hover:bg-indigo-200 transition"
+                >
+                  <FaUsers />
+                  {quiz.status === "SCHEDULED" ? "Participants" : "Results"}
+                </Link>
+
+                {/* Expanded Edit Options */}
                 {expandedQuiz?.id === quiz.id && (
-                  <div className="mt-4 space-y-2">
+                  <div className="mt-4 space-y-2 border-t pt-3">
                     <p>
                       <strong>Start Time:</strong> {quiz.startTime}
                     </p>
                     <p>
                       <strong>Duration:</strong> {quiz.duration} mins
                     </p>
-                    <p>
-                      <strong>Status:</strong> {quiz.status}
-                    </p>
-                    {/* Update fields */}
-                    <div className="mt-4 space-y-2">
+
+                    <div className="space-y-2">
                       <input
                         type="datetime-local"
                         className="border rounded-lg p-2 w-full"
                         value={quizEditData.startTime || quiz.startTime}
-                        placeholder="Start Time"
                         required
                         onChange={(e) =>
                           setQuizEditData({ ...quizEditData, startTime: e.target.value })
@@ -283,12 +305,11 @@ const Profile = () => {
                         }
                       >
                         <option value="SCHEDULED">Scheduled</option>
-                        <option value="LIVE">live</option>
+                        <option value="LIVE">Live</option>
                         <option value="COMPLETED">Completed</option>
                       </select>
                     </div>
 
-                    {/* Update & Delete */}
                     <div className="flex gap-3 mt-3">
                       <button
                         className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
@@ -317,8 +338,6 @@ const Profile = () => {
                         <FaTrash className="inline mr-2" /> Delete
                       </button>
                     </div>
-
-                    
                   </div>
                 )}
               </div>

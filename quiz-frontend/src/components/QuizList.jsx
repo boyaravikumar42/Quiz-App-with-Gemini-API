@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import QuizDetails from "./QuizDetails";
-import { FaClock, FaPlayCircle, FaCalendarAlt, FaListUl } from "react-icons/fa";
+import { FaClock, FaPlayCircle, FaCalendarAlt, FaListUl, FaUserAlt, FaQrcode, FaEvernote, FaAccessibleIcon, FaAirbnb, FaAnchor, FaBell, FaCoins, FaDiceTwo, FaGenderless, FaGem, FaEmpire } from "react-icons/fa";
 
 const QuizList = () => {
   const [quizzes, setQuizzes] = useState([]);
@@ -13,10 +13,13 @@ const QuizList = () => {
     const fetchQuizzes = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/quizzes/all`
-        );
-        setQuizzes(response.data);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/quizzes/all`);
+        // ✅ Sort quizzes: LIVE → SCHEDULED → COMPLETED
+        const sortedQuizzes = response.data.sort((a, b) => {
+          const order = { LIVE: 0, SCHEDULED: 1, COMPLETED: 2 };
+          return order[a.status] - order[b.status];
+        });
+        setQuizzes(sortedQuizzes);
       } catch (error) {
         console.error("Error fetching quizzes:", error);
         setMessage("❌ Failed to load quizzes.");
@@ -27,6 +30,20 @@ const QuizList = () => {
 
     fetchQuizzes();
   }, []);
+
+  // ✅ Status Badge Colors
+  const getStatusStyles = (status) => {
+    switch (status) {
+      case "LIVE":
+        return "text-green-400 font-bold bg-green-200";
+      case "SCHEDULED":
+        return "text-yellow-600 bg-yellow-200 text-black";
+      case "COMPLETED":
+        return "bg-gray-300 text-white";
+      default:
+        return "bg-gray-300 text-black";
+    }
+  };
 
   return (
     <section className="flex justify-center items-center min-h-screen bg-gray-50 pt-6">
@@ -46,20 +63,35 @@ const QuizList = () => {
                 <div
                   key={quiz.id}
                   onClick={() => setSelectedQuiz(quiz)}
-                  className="p-5 border rounded-xl cursor-pointer bg-white shadow-md hover:shadow-lg border-blue-500 hover:border-blue-400 transition transform hover:-translate-y-1"
+                  className="relative p-5  rounded-xl cursor-pointer bg-white shadow-md hover:shadow-xl border-blue-500 hover:border-blue-400 transition transform hover:-translate-y-1"
                 >
+                  {/* ✅ Status Badge */}
+                  <span
+                    className={`absolute top-1 right-2 px-3 py-1 text-xs  rounded-lg  ${getStatusStyles(
+                      quiz.status
+                    )}`}
+                  >
+                    {quiz.status}
+                  </span>
+
+                  {/* ✅ Title + Icon */}
                   <h3 className="text-xl font-semibold text-blue-600 flex items-center gap-2">
-                    <FaPlayCircle className="text-blue-500" /> {quiz.title}
+                    <FaEmpire className="text-blue-500" /> {quiz.title}
                   </h3>
+
+                  {/* ✅ Creator */}
+                  <p className="flex items-center gap-2 text-sm text-gray-700 mt-1">
+                    <FaUserAlt className="text-blue-400" />
+                    Created by: <span className="font-semibold">{quiz.createdBy || "Unknown"}</span>
+                  </p>
+
+                  {/* ✅ Description */}
                   <p className="text-gray-600 mt-1">{quiz.description}</p>
 
+                  {/* ✅ Additional Info */}
                   <div className="mt-3 space-y-1 text-sm text-gray-700">
                     <p className="flex items-center gap-2">
                       <FaClock className="text-blue-500" />
-                      <span className="font-semibold">Status:</span> {quiz.status}
-                    </p>
-                    <p className="flex items-center gap-2">
-                      <FaCalendarAlt className="text-blue-500" />
                       <span className="font-semibold">Start Time:</span>{" "}
                       {new Date(quiz.startTime).toLocaleString()}
                     </p>

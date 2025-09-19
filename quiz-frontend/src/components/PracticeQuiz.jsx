@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import axios from "axios";
 import {
   FaPlay,
@@ -12,6 +12,7 @@ import {
   FaLayerGroup,
   FaStopwatch,
 } from "react-icons/fa";
+import { useLoginContext } from "../context/LoginContext";
 
 export default function PracticeQuiz() {
   const [quiz, setQuiz] = useState([]);
@@ -30,6 +31,7 @@ export default function PracticeQuiz() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
 
   const token = localStorage.getItem("token");
+  const {user}=useLoginContext();
 
   // Fetch quiz
   const fetchQuiz = async () => {
@@ -99,6 +101,18 @@ export default function PracticeQuiz() {
     isCorrect(answers[index], q.answer, q.options)
   ).length;
 
+
+  if(!user){
+    return (
+      <div className=" mt-20 md:mt-25 max-w-3xl mx-auto p-6 text-blue-900">
+        <h1 className="text-3xl font-bold mb-6 text-center text-blue-700">  
+          Practice Quiz
+        </h1>
+        <p className="text-center text-red-600">You must be logged in to access the Practice Quiz.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-3xl mx-auto p-6 text-blue-900">
       <h1 className="text-3xl font-bold mb-6 text-center text-blue-700">
@@ -167,7 +181,6 @@ export default function PracticeQuiz() {
           </button>
         </div>
       )}
-
       {loading && <p className="mt-15 text-center">Loading quiz...</p>}
 
       {/* Start Screen */}

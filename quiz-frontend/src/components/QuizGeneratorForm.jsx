@@ -89,12 +89,18 @@ const QuizGeneratorForm = () => {
 
   if (!user) {
     return (
-      <section className="flex justify-center items-center min-h-screen bg-sky-50">
-        <div className="p-6 rounded-2xl w-full max-w-3xl text-center bg-white shadow-lg">
-          <h2 className="text-2xl font-bold text-blue-600">Please Login</h2>
-          <p className="text-gray-600">You need to be logged in to generate a quiz.</p>
+      <div className="flex justify-center items-center min-h-screen bg-sky-50"> 
+        <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-3xl text-center">
+          <h2 className="text-3xl font-bold text-blue-600 mb-4">Access Denied</h2>
+          <p className="text-gray-700 mb-6">You must be logged in to generate a quiz.</p> 
+          <button
+            onClick={() => navigate("/login")}
+            className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition"
+          >
+            Go to Login
+          </button>
         </div>
-      </section>
+      </div>
     );
   }
 
