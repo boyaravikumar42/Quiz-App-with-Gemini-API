@@ -138,7 +138,7 @@ const Profile = () => {
   }
 
   return (
-    <section className="flex flex-col items-center min-h-screen p-6 mt-12 space-y-6 bg-sky-50">
+    <section className="flex flex-col items-center min-h-screen p-6 mt-23 space-y-6 bg-sky-50">
       {/* User Info */}
       <div className="bg-white p-6 rounded-2xl shadow-md text-center w-full max-w-md">
         <h1 className="text-2xl font-bold flex justify-center items-center gap-2 text-indigo-600">

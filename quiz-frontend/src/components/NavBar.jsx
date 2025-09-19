@@ -36,6 +36,7 @@ const NavBar = () => {
                 <span className="bg-white text-sky-600 font-bold rounded-full w-8 h-8 flex items-center justify-center">
                   {user.username.charAt(0).toUpperCase()}
                 </span>
+                <span className="hidden sm:inline">{user.username}</span>
               </div>
 		  </Link>
             ) : (
