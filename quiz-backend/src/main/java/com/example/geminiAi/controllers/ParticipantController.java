@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -107,6 +108,17 @@ public class ParticipantController {
             return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(participant);
+    }
+
+    @DeleteMapping("/quit/{quizId}/{userId}")
+    public ResponseEntity<String> removeParticipant(@PathVariable String quizId,@PathVariable String userId)
+    {
+        boolean removed = participantService.removeParticipant(quizId, userId);
+        if(removed)
+        {
+            return ResponseEntity.ok("Participant removed successfully");
+        }
+        return new ResponseEntity<>("Participant not found",HttpStatus.NOT_FOUND);
     }
 }
 

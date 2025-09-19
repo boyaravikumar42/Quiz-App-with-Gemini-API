@@ -116,4 +116,11 @@ public class ParticipantService {
         if(existing.isEmpty()) return null;
         return existing.get();
     }
+
+    public boolean removeParticipant(String quizId, String userId) {
+        Optional<Participant> existing = participantRepo.findByQuizIdAndUserId(quizId, userId);
+        if(existing.isEmpty()) return false;
+        participantRepo.delete(existing.get());
+        return true;
+    }
 }

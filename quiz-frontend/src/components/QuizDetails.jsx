@@ -82,8 +82,29 @@ const QuizDetails = ({ quiz, onBack }) => {
   };
 
   const handleQuit = () => {
-    setParticipant(null);
-    toast.info("You have quit this quiz.");
+    if (!user) {
+      toast.error("You must be logged in to quit!");
+      return;
+    }
+    setLoading(true);
+    axios
+      .delete(
+        `${import.meta.env.VITE_API_URL}/api/participants/quit/${quiz.id}/${user.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then(() => {
+        setParticipant(null);
+        toast.success("You have quit the quiz.");
+      })
+      .catch((err) => {
+        toast.error(err.response?.data?.message || "Failed to quit!");
+      })
+      .finally(() => setLoading(false));
+      
   };
 
   const handleStart = () => {
