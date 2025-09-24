@@ -55,19 +55,38 @@ const ConductQuiz = () => {
   }, [started, timeLeft, submitted]);
   //update for each question
   const handleOptionSelect = async (qIndex, selectedOption) => {
-    if (submitted) return;
-    setAnswers({ ...answers, [qIndex]: selectedOption });
+  if (submitted) return;
 
-    const question = quiz.questions[qIndex];
-    if ((question.answer === selectedOption)|| (question.answer.length===1 && question.answer === selectedOption[0])) {
-      const newScore = score + 10;
-      setScore(newScore);
+  const question = quiz.questions[qIndex];
+  const previousAnswer = answers[qIndex];
+  const previousCorrect =
+    previousAnswer &&
+    (previousAnswer === question.answer ||
+      (question.answer.length === 1 && question.answer === previousAnswer[0]));
 
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/participants/update-score/${quizId}/${user.id}/${newScore}`
-      );
-    }
-  };
+  const newCorrect =
+    selectedOption === question.answer ||
+    (question.answer.length === 1 && question.answer === selectedOption[0]);
+
+  // Update answers
+  setAnswers((prev) => ({ ...prev, [qIndex]: selectedOption }));
+
+  let updatedScore = score;
+
+  // If previous answer was correct, subtract points
+  if (previousCorrect) updatedScore -= 10;
+
+  // If new selection is correct, add points
+  if (newCorrect) updatedScore += 10;
+
+  setScore(updatedScore);
+
+  // Update score in backend
+  await axios.post(
+    `${import.meta.env.VITE_API_URL}/api/participants/update-score/${quizId}/${user.id}/${updatedScore}`
+  );
+};
+
 
   const handleSubmit = async () => {
     if (!user) return;

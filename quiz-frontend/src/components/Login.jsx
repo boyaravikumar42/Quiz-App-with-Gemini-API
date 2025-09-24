@@ -12,7 +12,9 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const { login, user } = useLoginContext();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
 
   useEffect(() => {
     if (user) {
@@ -21,6 +23,7 @@ const Login = () => {
   }, [user, navigate]);
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
     setError("");
     try {
@@ -38,6 +41,7 @@ const Login = () => {
       setEmail("");
       setPassword("");
       toast.success("Login successful...!");
+      setLoading(false);
       navigate("/");
     } catch (err) {
       if (err.response) {
@@ -45,6 +49,7 @@ const Login = () => {
       } else {
         setError("Server error");
       }
+      setLoading(false);
     }
   };
 
@@ -100,10 +105,11 @@ const Login = () => {
 
           {/* Login Button */}
           <button
+            disabled={loading}
             type="submit"
             className="w-full bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2 rounded-lg transition duration-200"
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 

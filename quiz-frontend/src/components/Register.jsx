@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -9,6 +11,8 @@ const Register = () => {
   const [form, setForm] = useState({ username: "", email: "", password: "" });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -18,6 +22,7 @@ const Register = () => {
     e.preventDefault();
     setError("");
     setSuccess("");
+    setLoading(true);
     try {
       const response = await axios.post(
         `${apiUrl}/api/auth/register`,
@@ -27,12 +32,16 @@ const Register = () => {
 
       if (response.status === 201 || response.status === 200) {
         setSuccess("Registration successful! You can now login.");
+        toast.success("Registration successful! You can now login.");
+        navigate("/login");
         setForm({ username: "", email: "", password: "" });
       } else {
         setError("Registration failed");
       }
+      setLoading(false);
     } catch (err) {
       setError(err.response?.data?.message || "Server error");
+      setLoading(false);
     }
   };
 
@@ -88,10 +97,11 @@ const Register = () => {
 
           {/* Submit */}
           <button
+            disabled={loading}
             type="submit"
             className="w-full py-2 text-white font-semibold rounded-lg bg-sky-500 hover:bg-sky-600 transition"
           >
-            Register
+            {loading ? "Registering..." : "Register"}
           </button>
         </form>
 
