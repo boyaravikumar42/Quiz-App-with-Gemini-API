@@ -175,7 +175,7 @@ const QuizDetails = ({ quiz, onBack }) => {
 
       {/* Access Code & Action Button */}
       <div className="space-y-3">
-        {!participant && (
+        {(!participant && quiz.status !== "COMPLETED") && (
           <input
             type="text"
             placeholder="Enter Access Code"
