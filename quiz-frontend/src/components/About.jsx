@@ -75,7 +75,7 @@ export default function About() {
           <h3 className="flex justify-center items-center gap-2 text-xl font-semibold text-blue-800">
             <FaUserTie /> Mentor
           </h3>
-          <p className="text-gray-800 text-lg">G. Rajashekhar Reddy <sub>M. Tech, (Ph.D.)</sub></p>
+          <p className="text-gray-800 text-lg">G. Rajasekhar Reddy <sub>M. Tech, (Ph.D.)</sub></p>
         </div>
 
         {/* Developers */}
