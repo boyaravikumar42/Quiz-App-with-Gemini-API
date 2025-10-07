@@ -43,7 +43,7 @@ const ConductQuiz = () => {
     };
     fetchQuiz();
   }, [quizId]);
-
+  
   // Timer
   useEffect(() => {
     if (started && timeLeft > 0 && !submitted) {

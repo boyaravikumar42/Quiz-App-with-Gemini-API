@@ -1,8 +1,8 @@
 package com.example.geminiAi.controllers;
 
 import com.example.geminiAi.config.JwtUtil;
-import com.example.geminiAi.controllers.services.AuthService;
 import com.example.geminiAi.models.User;
+import com.example.geminiAi.services.AuthService;
 
 import jakarta.servlet.http.HttpServletRequest;
 

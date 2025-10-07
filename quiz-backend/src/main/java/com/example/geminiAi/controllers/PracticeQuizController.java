@@ -9,9 +9,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.example.geminiAi.controllers.services.QuizService;
 import com.example.geminiAi.models.QuizQuestion;
 import com.example.geminiAi.models.QuizRequest;
+import com.example.geminiAi.services.QuizService;
 
 
 @Component

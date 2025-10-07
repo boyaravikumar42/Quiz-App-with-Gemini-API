@@ -1,4 +1,4 @@
-package com.example.geminiAi.controllers.services;
+package com.example.geminiAi.services;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

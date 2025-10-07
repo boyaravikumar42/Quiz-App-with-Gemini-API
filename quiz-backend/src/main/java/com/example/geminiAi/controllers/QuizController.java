@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.geminiAi.controllers.services.QuizService;
 import com.example.geminiAi.models.Quiz;
 import com.example.geminiAi.models.QuizRequest;
+import com.example.geminiAi.services.QuizService;
 
 import io.netty.handler.codec.http.HttpScheme;
 import lombok.RequiredArgsConstructor;

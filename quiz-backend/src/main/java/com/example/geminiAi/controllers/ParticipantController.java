@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.geminiAi.controllers.services.ParticipantService;
 import com.example.geminiAi.models.Participant;
+import com.example.geminiAi.services.ParticipantService;
 
 import lombok.AllArgsConstructor;
 @CrossOrigin("http://localhost:5173/")

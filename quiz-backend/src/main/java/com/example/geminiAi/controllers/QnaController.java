@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.geminiAi.controllers.services.QnAService;
+import com.example.geminiAi.services.QnAService;
 
 import java.util.Map;
 //---------------it is not in the part of project it was used for learning --------------------------

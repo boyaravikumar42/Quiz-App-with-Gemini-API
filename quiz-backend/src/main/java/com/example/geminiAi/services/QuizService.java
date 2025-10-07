@@ -1,4 +1,4 @@
-package com.example.geminiAi.controllers.services;
+package com.example.geminiAi.services;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
