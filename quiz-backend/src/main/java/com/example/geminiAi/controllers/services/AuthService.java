@@ -1,4 +1,4 @@
-package com.example.geminiAi.services;
+package com.example.geminiAi.controllers.services;
 
 import com.example.geminiAi.config.JwtUtil;
 import com.example.geminiAi.models.User;

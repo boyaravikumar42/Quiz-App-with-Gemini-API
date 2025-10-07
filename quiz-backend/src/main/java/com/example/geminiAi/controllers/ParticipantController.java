@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.geminiAi.controllers.services.ParticipantService;
 import com.example.geminiAi.models.Participant;
-import com.example.geminiAi.services.ParticipantService;
 
 import lombok.AllArgsConstructor;
 @CrossOrigin("http://localhost:5173/")
@@ -40,7 +40,17 @@ public class ParticipantController {
             return new ResponseEntity<>("Quiz not found",HttpStatus.NOT_FOUND);
         return ResponseEntity.ok(participant);
     }
-
+    @PostMapping("/join-by-access-code")
+    public ResponseEntity<?> joinQuizByAccessCode(
+            @RequestParam String accesscode,
+            @RequestParam String username) {
+        Participant participant = participantService.joinQuizByAccessCode(accesscode, username);
+        if(participant==null)
+        {
+            return new ResponseEntity<>("Invalid Access code",HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(participant);
+    }
     @PostMapping("/submit")
     public ResponseEntity<Participant> submitQuiz(@RequestBody Map<String, Object> request) {
         String quizId = (String) request.get("quizId");
@@ -53,12 +63,10 @@ public class ParticipantController {
         //broadcasting when submitted
         List<Participant> updatedLeaderboard = participantService.getLeaderboard(quizId);
         messagingTemplate.convertAndSend("/topic/leaderboard/" + quizId, updatedLeaderboard);
-
-
-        return ResponseEntity.ok(participant);
-        
+        return ResponseEntity.ok(participant);  
     }
 
+    
     @GetMapping("/dashboard/{quizId}")
     public ResponseEntity<List<Participant>> getDashboard(@PathVariable String quizId) {
         return ResponseEntity.ok(participantService.getDashboard(quizId));
@@ -69,17 +77,7 @@ public class ParticipantController {
         return ResponseEntity.ok(participantService.getLeaderboard(quizId));
     }
 
-    @PostMapping("/join-by-access-code")
-    public ResponseEntity<?> joinQuizByAccessCode(
-            @RequestParam String accesscode,
-            @RequestParam String username) {
-        Participant participant = participantService.joinQuizByAccessCode(accesscode, username);
-        if(participant==null)
-        {
-            return new ResponseEntity<>("Invalid Access code",HttpStatus.NOT_FOUND);
-        }
-        return ResponseEntity.ok(participant);
-    }
+    
 
     // WebSocket broadcast after score update
     @PostMapping("/update-score/{quizId}/{userId}/{score}")
@@ -99,6 +97,9 @@ public class ParticipantController {
 
         return ResponseEntity.ok().build();
     }
+
+
+
     @GetMapping("/isJoined/{quizId}/{userId}")
     public ResponseEntity<Participant> isJoined(@PathVariable String quizId,@PathVariable String userId)
     {

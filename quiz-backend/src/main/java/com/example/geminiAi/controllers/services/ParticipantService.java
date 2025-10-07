@@ -1,4 +1,4 @@
-package com.example.geminiAi.services;
+package com.example.geminiAi.controllers.services;
 
 import java.util.Comparator;
 import java.util.Date;
@@ -45,6 +45,17 @@ public class ParticipantService {
 
         return participantRepo.save(participant);
     }
+    
+    public List<Participant> getLeaderboard(String quizId) {
+        List<Participant> participants = participantRepo.findByQuizId(quizId);
+        participants.sort(Comparator
+                .comparing(Participant::getScore).reversed()
+                .thenComparing(Participant::getTimeTaken));
+        return participants;
+    }
+    public List<Participant> getDashboard(String quizId) {
+        return participantRepo.findByQuizId(quizId);
+    }
 
     public Participant submitQuiz(String quizId, String userId, int score, long timeTaken) {
         Participant participant = participantRepo.findByQuizIdAndUserId(quizId, userId)
@@ -58,17 +69,8 @@ public class ParticipantService {
         return participantRepo.save(participant);
     }
 
-    public List<Participant> getDashboard(String quizId) {
-        return participantRepo.findByQuizId(quizId);
-    }
+    
 
-    public List<Participant> getLeaderboard(String quizId) {
-        List<Participant> participants = participantRepo.findByQuizId(quizId);
-        participants.sort(Comparator
-                .comparing(Participant::getScore).reversed()
-                .thenComparing(Participant::getTimeTaken));
-        return participants;
-    }
     public Participant joinQuizByAccessCode(String accessCode, String username) {
         // 1. Find quiz by access code
         Quiz quiz=null;

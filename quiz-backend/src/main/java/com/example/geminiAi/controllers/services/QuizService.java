@@ -1,4 +1,4 @@
-package com.example.geminiAi.services;
+package com.example.geminiAi.controllers.services;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -96,7 +96,7 @@ public class QuizService {
                 .questions(questions)
                 .questionCount(questions.size())
                 .status("SCHEDULED")
-                .startTime(LocalDateTime.parse(request.getStartTime())) // default 10 minutes from now
+                .startTime(LocalDateTime.parse(request.getStartTime()))
                 .duration(request.getDuration())
                 .build();
 

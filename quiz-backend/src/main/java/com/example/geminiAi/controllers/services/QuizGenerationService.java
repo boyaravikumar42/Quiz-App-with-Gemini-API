@@ -1,4 +1,4 @@
-package com.example.geminiAi.services;
+package com.example.geminiAi.controllers.services;
 
 import com.example.geminiAi.models.QuizQuestion;
 import com.fasterxml.jackson.core.type.TypeReference;

@@ -50,6 +50,7 @@ const ConductQuiz = () => {
       const timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
       return () => clearInterval(timer);
     } else if (timeLeft === 0 && !submitted) {
+      handleOptionSelect(currentQ, answers[currentQ]);
       handleSubmit();
     }
   }, [started, timeLeft, submitted]);

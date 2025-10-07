@@ -13,6 +13,7 @@ import {
   FaStopwatch,
 } from "react-icons/fa";
 import { useLoginContext } from "../context/LoginContext";
+import {toast} from "react-toastify"
 
 export default function PracticeQuiz() {
   const [quiz, setQuiz] = useState([]);
@@ -35,6 +36,11 @@ export default function PracticeQuiz() {
 
   // Fetch quiz
   const fetchQuiz = async () => {
+    if(timeLimit<questionCount*0.5 || timeLimit>questionCount){
+      toast.error("please provide valid time limit. It should be between half of no. of questions to total no.of questions");
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await axios.post(
