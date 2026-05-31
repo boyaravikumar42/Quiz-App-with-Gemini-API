@@ -49,36 +49,49 @@ public class QuizService {
 
 
         Map<String, Object> requestBody = Map.of(
-                "contents", List.of(
-                        Map.of("parts", List.of(
-                                Map.of("text", prompt)
-                        ))
-                )
-        );
+            "model", "llama-3.1-8b-instant",
+            "messages", List.of(
+                    Map.of(
+                            "role", "user",
+                            "content", prompt
+                    )
+            ),
+            "temperature", 0.7
+    );
 
         try {
             WebClient webClient = webClientBuilder.build();
 
             Map<String, Object> response = webClient.post()
-                    .uri(url + key)
+                    .uri(url)
+                    .header("Authorization", "Bearer " + key)
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(requestBody)
                     .retrieve()
                     .bodyToMono(Map.class)
                     .block();
 
-            List<Map<String, Object>> candidates = (List<Map<String, Object>>) response.get("candidates");
-            Map<String, Object> content = (Map<String, Object>) candidates.get(0).get("content");
-            List<Map<String, Object>> parts = (List<Map<String, Object>>) content.get("parts");
-            String text = sanitize((String) parts.get(0).get("text"));
+           List<Map<String, Object>> choices =
+                (List<Map<String, Object>>) response.get("choices");
 
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(text, new TypeReference<>() {});
+        Map<String, Object> message =
+                (Map<String, Object>) choices.get(0).get("message");
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Collections.emptyList();
-        }
+        String content = (String) message.get("content");
+
+        System.out.println("Groq Response:");
+        System.out.println(content);
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        return mapper.readValue(
+                content,
+                new TypeReference<List<QuizQuestion>>() {}
+        );
+            } catch (Exception e) {
+        e.printStackTrace();
+        return Collections.emptyList();
+    }
     }
 
     public Quiz createQuiz(QuizRequest request) {
