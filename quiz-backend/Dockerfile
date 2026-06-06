@@ -4,7 +4,7 @@ FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 COPY . .
 
-RUN mvn -e clean package -DskipTests
+RUN mvn -X clean package -DskipTests
 
 # Stage 2: Run
 FROM eclipse-temurin:21-jdk
