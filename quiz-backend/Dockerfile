@@ -1,16 +1,17 @@
-# Step 1: Use an official OpenJDK image as base
-FROM openjdk:21-jdk-slim
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 
-# Step 2: Add a volume to store logs (optional)
-VOLUME /tmp
+WORKDIR /app
+COPY . .
 
-# Step 3: Expose port (same as in application.properties -> server.port)
-EXPOSE 8081
+RUN mvn clean package -DskipTests
 
-# Step 4: Copy JAR file into container
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
+FROM openjdk:17
 
-# Step 5: Run the jar file
-ENTRYPOINT ["java","-jar","/app.jar"]
+WORKDIR /app
+
+COPY --from=build /app/target/*.jar app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
 
