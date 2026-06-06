@@ -38,18 +38,18 @@ public class QuizService {
     @Value("${api.url}")
     private String url;
 
-    public List<QuizQuestion> generateQuizQuestions(String topic, int count,String difficulty) {
-        String prompt = String.format(
-                "Generate %d multiple-choice questions with 4 options each on the topic \"%s\" at a %s difficulty level. "
-                        + "Each question must include exactly four options and one correct answer. "
-                        + "Respond strictly in JSON format like: "
-                        + "[{\"question\": \"...\", \"options\": [\"A\", \"B\", \"C\", \"D\"], \"answer\": \"A\"}]",
-                count, topic, difficulty.toUpperCase()
-        );
+    public List<QuizQuestion> generateQuizQuestions(String topic, int count, String difficulty) {
 
+    String prompt = String.format(
+            "Generate %d multiple-choice questions with 4 options each on the topic \"%s\" at a %s difficulty level. " +
+                    "Each question must include exactly four options and one correct answer. " +
+                    "Respond strictly in JSON format like: " +
+                    "[{\"question\": \"...\", \"options\": [\"A\", \"B\", \"C\", \"D\"], \"answer\": \"A\"}]",
+            count, topic, difficulty.toUpperCase()
+    );
 
-        Map<String, Object> requestBody = Map.of(
-            "model", "llama-3.1-8b-instant",
+    Map<String, Object> requestBody = Map.of(
+            "model", "openrouter/owl-alpha",
             "messages", List.of(
                     Map.of(
                             "role", "user",
@@ -59,19 +59,21 @@ public class QuizService {
             "temperature", 0.7
     );
 
-        try {
-            WebClient webClient = webClientBuilder.build();
+    try {
+        WebClient webClient = webClientBuilder.build();
 
-            Map<String, Object> response = webClient.post()
-                    .uri(url)
-                    .header("Authorization", "Bearer " + key)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(requestBody)
-                    .retrieve()
-                    .bodyToMono(Map.class)
-                    .block();
+        Map<String, Object> response = webClient.post()
+                .uri(url)
+                .header("Authorization", "Bearer " + key)
+                .header("HTTP-Referer", "http://localhost")
+                .header("X-Title", "QuizApp")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(requestBody)
+                .retrieve()
+                .bodyToMono(Map.class)
+                .block();
 
-           List<Map<String, Object>> choices =
+        List<Map<String, Object>> choices =
                 (List<Map<String, Object>>) response.get("choices");
 
         Map<String, Object> message =
@@ -79,21 +81,22 @@ public class QuizService {
 
         String content = (String) message.get("content");
 
-        System.out.println("Groq Response:");
+        System.out.println("OpenRouter Response:");
         System.out.println(content);
 
         ObjectMapper mapper = new ObjectMapper();
 
         return mapper.readValue(
-                content,
+                cleanJson(content),
                 new TypeReference<List<QuizQuestion>>() {}
         );
-            } catch (Exception e) {
+
+    } catch (Exception e) {
+        System.out.println("error in quiz generarion");
         e.printStackTrace();
         return Collections.emptyList();
     }
-    }
-
+}
     public Quiz createQuiz(QuizRequest request) {
         List<QuizQuestion> questions = generateQuizQuestions(request.getTopic(), request.getQuestionCount(),request.getDifficulty());
         if(questions.isEmpty())
