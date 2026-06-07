@@ -43,8 +43,8 @@ public class QuizService {
     String prompt = String.format(
             "Generate %d multiple-choice questions with 4 options each on the topic \"%s\" at a %s difficulty level. " +
                     "Each question must include exactly four options and one correct answer. " +
-                    "Respond strictly in JSON format like: " +
-                    "[{\"question\": \"...\", \"options\": [\"A\", \"B\", \"C\", \"D\"], \"answer\": \"A\"}]",
+                    "Return ONLY valid JSON. No explanation, no markdown, no backticks. " +
+                    "Format: [{\"question\": \"...\", \"options\": [\"A\", \"B\", \"C\", \"D\"], \"answer\": \"A\"}]",
             count, topic, difficulty.toUpperCase()
     );
 
@@ -87,15 +87,27 @@ public class QuizService {
         ObjectMapper mapper = new ObjectMapper();
 
         return mapper.readValue(
-                cleanJson(content),
+                extractJsonArray(content),
                 new TypeReference<List<QuizQuestion>>() {}
         );
 
     } catch (Exception e) {
-        System.out.println("error in quiz generarion");
+        System.out.println("Error in quiz generation");
         e.printStackTrace();
         return Collections.emptyList();
     }
+}
+    private String extractJsonArray(String content) {
+    if (content == null) return "[]";
+
+    int start = content.indexOf('[');
+    int end = content.lastIndexOf(']');
+
+    if (start == -1 || end == -1 || start > end) {
+        return "[]";
+    }
+
+    return content.substring(start, end + 1).trim();
 }
     public Quiz createQuiz(QuizRequest request) {
         List<QuizQuestion> questions = generateQuizQuestions(request.getTopic(), request.getQuestionCount(),request.getDifficulty());
