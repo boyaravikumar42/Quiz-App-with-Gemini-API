@@ -41,12 +41,21 @@ public class QuizService {
     public List<QuizQuestion> generateQuizQuestions(String topic, int count, String difficulty) {
 
     String prompt = String.format(
-            "Generate %d multiple-choice questions with 4 options each on the topic \"%s\" at a %s difficulty level. " +
-                    "Each question must include exactly four options and one correct answer. " +
-                    "Return ONLY valid JSON. No explanation, no markdown, no backticks. " +
-                    "Format: [{\"question\": \"...\", \"options\": [\"A\", \"B\", \"C\", \"D\"], \"answer\": \"A\"}]",
-            count, topic, difficulty.toUpperCase()
-    );
+        "Generate %d multiple-choice questions (MCQs) on the topic \"%s\" with %s difficulty level. " +
+        "Each question must have exactly 4 options labeled strictly as: \"A.\", \"B.\", \"C.\", \"D.\". " +
+        "IMPORTANT RULES: " +
+        "1. Each option must start with its label exactly (A., B., C., D.) followed by a space and the option text. " +
+        "2. The correct answer MUST be the full option string including the prefix (e.g., \"A. Option text\"). " +
+        "3. Do NOT return only the letter (A/B/C/D). Return full option text as answer. " +
+        "4. Do NOT include explanations, markdown, or backticks. " +
+        "5. Output ONLY valid JSON array. " +
+        "6. Ensure the answer exactly matches one of the options (string match must be identical). " +
+        "Output format strictly: " +
+        "[{\"question\": \"...\", \"options\": [\"A. ...\", \"B. ...\", \"C. ...\", \"D. ...\"], \"answer\": \"A. ...\"}]",
+        count,
+        topic,
+        difficulty.toUpperCase()
+);
 
     Map<String, Object> requestBody = Map.of(
             "model", "openrouter/owl-alpha",
